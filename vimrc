@@ -102,7 +102,7 @@ colorscheme molokai
 " set line number color
 highlight LineNr guifg=#666666
 highlight ColorColumn ctermbg=darkgrey guibg=#2f2f2f
-set colorcolumn=86
+set colorcolumn=79
 set ruler
 
 " highlight things that we find with the search
@@ -118,6 +118,8 @@ let Tlist_Show_One_File = 1
 let Tlist_Inc_Winwidth = 0
 let Tlist_Ctags_Cmd = "vimctags"
 "}}}
+
+let NERDTreeIgnore = ['\.pyc$']
 
 "map <F8> :!vimctags -f ./tags -h ".php.tao" -R --exclude="\.svn" --totals=yes --tag-relative=yes --PHP-kinds=+cf --regex-PHP="/abstract class ([^ ]*)/\1/c/" --regex-PHP="/interface ([^ ]*)/\1/c/" --regex-PHP="/(public |static |abstract |protected |private )+function ([^ (]*)/\2/f/"
 
@@ -137,8 +139,12 @@ ab pubm /**<CR> * @param <CR>* @return void<CR>*/<CR><Backspace>public function(
 ab privar /**<CR> * @var <CR>*/<CR>private $
 ab provar /**<CR> * @var <CR>*/<CR>protected $
 ab pubvar /**<CR> * @var <CR>*/<CR>public $
+ab ip import ipdb; ipdb.set_trace()
 
 let g:dwm_map_keys=0
 
 " expand tabs to spaces
 set expandtab
+set novisualbell
+
+set guifont=Monospace\ 8
