@@ -1,5 +1,15 @@
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
+set nocompatible               " be iMproved
+filetype off                   " required!
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-fugitive'
+
+filetype plugin indent on
 
 " set our tabs to four spaces
 set smartindent
@@ -11,9 +21,6 @@ syntax on
 
 " set auto-indenting on for programming
 set ai
-
-" turn off compatibility with the old vi
-set nocompatible
 
 " Make mouse middle click paste without formatting it.
 map <MouseMiddle> <Esc>"*p
@@ -129,10 +136,6 @@ autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bu
 
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 
-"Treat .tao files as php and .twig files as html
-au BufNewFile,BufRead *.tao set filetype=php
-au BufNewFile,BufRead *.twig set filetype=html
-
 " abbreviations
 ab dcm /**<CR> * @param <CR>* @return void<CR>*/<Esc><Up><Up>$i
 ab pubm /**<CR> * @param <CR>* @return void<CR>*/<CR><Backspace>public function()<CR>{<CR><CR>}<Esc>kkk%hi
@@ -140,7 +143,8 @@ ab privar /**<CR> * @var <CR>*/<CR>private $
 ab provar /**<CR> * @var <CR>*/<CR>protected $
 ab pubvar /**<CR> * @var <CR>*/<CR>public $
 ab ip import ipdb; ipdb.set_trace()
-
+ab tif {% if %}<CR><CR>{% endif %}<Up><Up><Left><Left><Left>
+ab tfor {% for %}<CR><CR>{% endfor %}<Up><Up><Left><Left><Left>
 let g:dwm_map_keys=0
 
 " expand tabs to spaces
