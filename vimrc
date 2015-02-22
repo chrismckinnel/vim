@@ -1,20 +1,34 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim/
 
-Bundle 'gmarik/vundle'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-fugitive'
+call vundle#begin()
+
+" let Vundle manage Vundle
+Plugin 'gmarik/Vundle.vim' 
+
+Plugin 'scrooloose/nerdtree'
+Plugin 'ervandew/supertab'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'andviro/flake8-vim'
+Plugin 'nsf/gocode', {'rtp': 'vim/'}
+Plugin 'fatih/vim-go'
+
+call vundle#end()
+
+" Make tab the default for omni-complete, and make it context aware
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+let g:SuperTabDefaultCompletionType = "context"
+
+" Map the leader key to ,
+let mapleader = ","
 
 filetype plugin indent on
 
-" set our tabs to four spaces
-set smartindent
-set sw=4
-set ts=4
+" tell vim to look for a tags file anywhere in the project dir
+set tags=./tags;/
 
 " turn syntax highlighting on by default
 syntax on
@@ -34,12 +48,6 @@ set dir=~/.vim/sessions
 
 " Turn off annoying swapfiles
 set noswapfile
-
-" turn on the "visual bell" - which is much quieter than the "audio blink"
-set vb
-
-" do not highlight words when searching for them. it's distracting.
-set nohlsearch
 
 " highlight search terms incrementally
 set incsearch
@@ -74,7 +82,7 @@ set shell=bash\ --login
 set wildchar=<Tab> wildmenu wildmode=full
 
 " map [jj] to Esc and Write in insert mode
-inoremap jj <Esc>:w<CR>
+inoremap jj <Esc>:w<CR> :redraw!<CR>
 inoremap ;; <End>;<Esc>:w<CR>
 
 " Create Blank Newlines and stay in Normal mode
@@ -100,11 +108,10 @@ noremap <C-S> :%s/\s\+$//g<CR>:w<CR>
 nnoremap ; :
 nnoremap : ;
 
+" show all open buffers
 noremap _ :ls<CR>:b
 
 " noremap dos :e ++ff=dos<CR>:w<CR>
-
-colorscheme molokai
 
 " set line number color
 highlight LineNr guifg=#666666
@@ -126,29 +133,91 @@ let Tlist_Inc_Winwidth = 0
 let Tlist_Ctags_Cmd = "vimctags"
 "}}}
 
-let NERDTreeIgnore = ['\.pyc$']
-
-"map <F8> :!vimctags -f ./tags -h ".php.tao" -R --exclude="\.svn" --totals=yes --tag-relative=yes --PHP-kinds=+cf --regex-PHP="/abstract class ([^ ]*)/\1/c/" --regex-PHP="/interface ([^ ]*)/\1/c/" --regex-PHP="/(public |static |abstract |protected |private )+function ([^ (]*)/\2/f/"
+" tell NERDTree to ignore .pyc files
+let NERDTreeIgnore = ['\.pyc$', '\.class$']
 
 autocmd FileType html,htmldjango,jinjahtml,eruby,mako,twig let b:closetag_html_style=1
 
-autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag/plugin/closetag.vim
-
-autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-
 " abbreviations
-ab dcm /**<CR> * @param <CR>* @return void<CR>*/<Esc><Up><Up>$i
-ab pubm /**<CR> * @param <CR>* @return void<CR>*/<CR><Backspace>public function()<CR>{<CR><CR>}<Esc>kkk%hi
-ab privar /**<CR> * @var <CR>*/<CR>private $
-ab provar /**<CR> * @var <CR>*/<CR>protected $
-ab pubvar /**<CR> * @var <CR>*/<CR>public $
 ab ip import ipdb; ipdb.set_trace()
-ab tif {% if %}<CR><CR>{% endif %}<Up><Up><Left><Left><Left>
-ab tfor {% for %}<CR><CR>{% endfor %}<Up><Up><Left><Left><Left>
 let g:dwm_map_keys=0
 
-" expand tabs to spaces
-set expandtab
-set novisualbell
+" Turn off error bells and visual bells
+set noerrorbells visualbell t_vb=
+autocmd GUIEnter * set visualbell t_vb=
 
-set guifont=Monospace\ 8
+" Remove all whitespace from the end of files
+autocmd BufWritePre *.py :%s/\s\+$//e
+
+" Go to previous (last accessed) window.
+autocmd VimEnter * wincmd p
+
+" solarized settings
+if has('gui_running')
+    colorscheme solarized
+    set background=dark
+else
+    set background=light
+endif
+
+syntax enable
+
+" Make jedi behave better
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 0
+
+" Yank text to the OS X clipboard
+noremap <Leader>y "*y
+noremap <Leader>yy "*Y
+
+" Preserve indentation while pasting text from the OS X clipboard
+noremap <Leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
+
+" Save and close a file with ,,
+nnoremap ,, <ESC>ZZ
+inoremap ,, <ESC>ZZ
+
+set undofile
+set undodir=~/.vim_undo
+set undolevels=5000 
+
+nnoremap <leader>1 yypVr=
+nnoremap <leader>q gqip
+
+nnoremap <C-RIGHT> <C-w>>
+nnoremap <C-LEFT> <C-w><
+nnoremap <C-UP> :1winc -<CR>
+nnoremap <C-DOWN> :1winc +<CR>
+
+nnoremap <Space> <Tab>
+nnoremap <S-space> <C-o>
+
+" Map <Ctrl-c> to auto complete for java files using Eclim
+inoremap <C-c> <C-x><C-u>
+
+" Remap :JavaCorrect to <C-g>
+nnoremap <C-g> :JavaCorrect <CR>
+
+"
+" set our tabs to four spaces
+set smartindent
+set expandtab
+set sw=4
+set ts=4
+
+set clipboard=unnamed
+
+" Use real tabs for .go files
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+
+" Map ,d to jump to definition for go files
+au FileType go nmap <leader>d <Plug>(go-def)
+
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+
+au FileType go nmap <leader>i <Plug>(go-install)
+au FileType go nmap <leader>gd <Plug>(go-doc)
